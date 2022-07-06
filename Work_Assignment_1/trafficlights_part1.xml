@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>const int N = 4;
+int i = 0, ii = 0, j = 0, jj = 0;
+int majorcars[N], minorcars[N];
+
+chan detected, enter, reset, majorred, minorred, majormove, minormove;</declaration>
+	<template>
+		<name x="5" y="5">MajorLights</name>
+		<declaration>clock x;</declaration>
+		<location id="id0" x="-799" y="-748" color="#00ff00">
+			<name x="-782" y="-765">Green</name>
+		</location>
+		<location id="id1" x="-510" y="-748" color="#ffff00">
+			<name x="-493" y="-765">Yellow</name>
+			<label kind="invariant" x="-518" y="-731">x&lt;=5</label>
+		</location>
+		<location id="id2" x="-212" y="-748" color="#ff0000">
+			<name x="-229" y="-782">Red1</name>
+			<label kind="invariant" x="-222" y="-731">x&lt;=1</label>
+		</location>
+		<location id="id3" x="68" y="-748" color="#ff0000">
+			<name x="58" y="-782">Red2</name>
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-841" y="-841">majormove!</label>
+			<nail x="-858" y="-824"/>
+			<nail x="-739" y="-824"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-552" y="-841">majormove!</label>
+			<nail x="-569" y="-824"/>
+			<nail x="-450" y="-824"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-391" y="-637">minorred?</label>
+			<label kind="assignment" x="-756" y="-654">x:=0</label>
+			<nail x="68" y="-637"/>
+			<nail x="-799" y="-637"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-170" y="-748">x==1</label>
+			<label kind="synchronisation" x="-102" y="-765">majorred!</label>
+			<label kind="assignment" x="-17" y="-748">x:=0</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-467" y="-748">x==5</label>
+			<label kind="assignment" x="-297" y="-748">x:=0</label>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-756" y="-748">x&gt;=30</label>
+			<label kind="synchronisation" x="-671" y="-765">detected?</label>
+			<label kind="assignment" x="-595" y="-748">x:=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>MajorCar</name>
+		<parameter>const int[0,N] id</parameter>
+		<location id="id4" x="-170" y="-76" color="#00ff00">
+			<name x="-195" y="-110">Moving</name>
+		</location>
+		<location id="id5" x="85" y="-76" color="#ff0000">
+			<name x="75" y="-110">Waiting</name>
+		</location>
+		<init ref="id4"/>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-102" y="-8">ii&lt;N &amp;&amp; majorcars[ii]==id</label>
+			<label kind="synchronisation" x="-85" y="17">majormove?</label>
+			<label kind="assignment" x="-161" y="-42">ii:=(ii+1)%N</label>
+			<nail x="85" y="17"/>
+			<nail x="-170" y="17"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="guard" x="-127" y="-76">i&lt;N</label>
+			<label kind="assignment" x="-51" y="-76">majorcars[i]=id,
+i:=(i+1)%N</label>
+		</transition>
+	</template>
+	<template>
+		<name>MinorLights</name>
+		<declaration>clock y;</declaration>
+		<location id="id6" x="68" y="-748" color="#ff0000">
+			<name x="58" y="-782">Red1</name>
+			<label kind="invariant" x="25" y="-731">y&lt;=1</label>
+		</location>
+		<location id="id7" x="-799" y="-748" color="#ff0000">
+			<name x="-809" y="-782">Red2</name>
+		</location>
+		<location id="id8" x="-212" y="-748" color="#ffff00">
+			<name x="-195" y="-765">Yellow</name>
+			<label kind="invariant" x="-222" y="-731">y&lt;=5</label>
+		</location>
+		<location id="id9" x="-510" y="-748" color="#00ff00">
+			<name x="-493" y="-765">Green</name>
+			<label kind="invariant" x="-518" y="-731">y&lt;=24</label>
+		</location>
+		<init ref="id7"/>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-254" y="-841">minormove!</label>
+			<nail x="-272" y="-824"/>
+			<nail x="-153" y="-824"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-551" y="-841">minormove!</label>
+			<nail x="-569" y="-824"/>
+			<nail x="-450" y="-824"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-25" y="-654">y==1</label>
+			<label kind="synchronisation" x="-391" y="-637">minorred!</label>
+			<label kind="assignment" x="-756" y="-654">y:=0</label>
+			<nail x="68" y="-637"/>
+			<nail x="-799" y="-637"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-170" y="-748">y==5</label>
+			<label kind="synchronisation" x="-93" y="-765">reset!</label>
+			<label kind="assignment" x="-17" y="-748">y:=0</label>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-467" y="-748">y==24</label>
+			<label kind="assignment" x="-297" y="-748">y:=0</label>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-688" y="-765">majorred?</label>
+			<label kind="assignment" x="-595" y="-748">y:=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>MinorCar</name>
+		<parameter>const int[0,N] id</parameter>
+		<location id="id10" x="85" y="-76" color="#ff0000">
+			<name x="75" y="-110">Waiting</name>
+		</location>
+		<location id="id11" x="-170" y="-76" color="#00ff00">
+			<name x="-195" y="-110">Moving</name>
+		</location>
+		<init ref="id11"/>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id11"/>
+			<label kind="guard" x="-102" y="-8">jj&lt;N &amp;&amp; minorcars[jj]==id</label>
+			<label kind="synchronisation" x="-85" y="17">minormove?</label>
+			<label kind="assignment" x="-161" y="-42">jj:=(jj+1)%N</label>
+			<nail x="85" y="17"/>
+			<nail x="-170" y="17"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id10"/>
+			<label kind="guard" x="-127" y="-76">j&lt;N</label>
+			<label kind="synchronisation" x="-68" y="-93">enter!</label>
+			<label kind="assignment" x="-51" y="-76">minorcars[j]=id,
+j:=(j+1)%N</label>
+		</transition>
+	</template>
+	<template>
+		<name>Sensor</name>
+		<location id="id12" x="-501" y="-544" color="#00ff00">
+			<name x="-578" y="-552">Enabled</name>
+		</location>
+		<location id="id13" x="-170" y="-544" color="#ff0000">
+			<name x="-153" y="-552">Disabling</name>
+		</location>
+		<location id="id14" x="-331" y="-357" color="#ff0000">
+			<name x="-331" y="-340">Disabled</name>
+		</location>
+		<init ref="id12"/>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id14"/>
+			<label kind="synchronisation" x="-450" y="-348">enter?</label>
+			<nail x="-399" y="-374"/>
+			<nail x="-391" y="-314"/>
+		</transition>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="-467" y="-450">reset?</label>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id14"/>
+			<label kind="synchronisation" x="-246" y="-450">detected!</label>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="-357" y="-561">enter?</label>
+		</transition>
+	</template>
+	<system>Car0 := MajorCar(0);
+Car1 := MajorCar(1);
+Car2 := MinorCar(2);
+Car3 := MinorCar(3);
+
+system MajorLights, MinorLights, Sensor, Car0, Car1, Car2, Car3;</system>
+	<queries>
+		<query>
+			<formula>A&lt;&gt; Car3.Waiting imply MinorLights.Red2</formula>
+			<comment>It is possible for a car to enter into the system when the lights are green or red</comment>
+		</query>
+		<query>
+			<formula>A&lt;&gt; Car2.Waiting imply MinorLights.Green</formula>
+			<comment>It is possible for a car to enter into the system when the lights are green or red</comment>
+		</query>
+		<query>
+			<formula>A&lt;&gt; Car1.Waiting imply MajorLights.Red2</formula>
+			<comment>It is possible for a car to enter into the system when the lights are green or red</comment>
+		</query>
+		<query>
+			<formula>A&lt;&gt; Car0.Waiting imply MajorLights.Green</formula>
+			<comment>It is possible for a car to enter into the system when the lights are green or red</comment>
+		</query>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>Car3.Waiting --&gt; MinorLights.Green</formula>
+			<comment>If there are cars waiting they will eventually have green lights</comment>
+		</query>
+		<query>
+			<formula>Car2.Waiting --&gt; MinorLights.Green</formula>
+			<comment>If there are cars waiting they will eventually have green lights</comment>
+		</query>
+		<query>
+			<formula>Car1.Waiting --&gt; MajorLights.Green</formula>
+			<comment>If there are cars waiting they will eventually have green lights</comment>
+		</query>
+		<query>
+			<formula>Car0.Waiting --&gt; MajorLights.Green</formula>
+			<comment>If there are cars waiting they will eventually have green lights</comment>
+		</query>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>A[] MajorLights.Yellow + MinorLights.Yellow &lt;= 1</formula>
+			<comment>The minor-road and major-road lights cannot be yellow at the same time</comment>
+		</query>
+		<query>
+			<formula>A[] MajorLights.Green + MinorLights.Green &lt;= 1</formula>
+			<comment>The minor-road and major-road lights cannot be green at the same time</comment>
+		</query>
+		<query>
+			<formula>A[] not deadlock</formula>
+			<comment>The system never enters in a deadlock state</comment>
+		</query>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; Car0.Waiting + Car1.Waiting + Car2.Waiting + Car3.Waiting == 4</formula>
+			<comment>It is possible for all cars to be waiting to pass</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; MajorLights.Red2</formula>
+			<comment>The major-road light can go red</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; MinorLights.Green</formula>
+			<comment>The minor-road light can go green</comment>
+		</query>
+	</queries>
+</nta>
